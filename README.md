@@ -1,12 +1,46 @@
-DevOps Siri VoiceOps Assistant
+# 🎙️ DevOps Siri VoiceOps Assistant
 
-A DevOps Siri–branded real-time AI voice assistant for DevOps learning, troubleshooting guidance, and safe local diagnostics.
+A DevOps Siri-branded real-time AI voice assistant for DevOps learning, troubleshooting guidance, and safe local diagnostics.
 
-The browser captures microphone audio and streams it over WebSocket to a FastAPI backend. The backend keeps a Gemini Live session open, streams the assistant's voice back to the browser, and exposes a small set of read-only DevOps tools.
+The browser captures microphone audio and streams it over WebSocket to a FastAPI backend. The backend maintains a Gemini Live session, streams the assistant's voice back to the browser, and exposes a small set of read-only DevOps tools.
 
-📁 Project Structure
+---
 
-devops-siri-voiceops-assistant/
+## 🚀 Features
+
+✅ Real-time voice conversation with Gemini Live
+
+✅ DevOps Siri-inspired frontend
+
+✅ Linux troubleshooting guidance
+
+✅ Docker concepts and diagnostics
+
+✅ Kubernetes learning and troubleshooting
+
+✅ Jenkins and CI/CD explanations
+
+✅ Networking fundamentals
+
+✅ Read-only system diagnostics
+
+✅ Tool activity and transcript visibility
+
+### Supported Diagnostics
+
+- CPU usage
+- Memory usage
+- Disk usage
+- TCP ports
+- HTTP/HTTPS endpoint checks
+- Docker container listing (optional)
+
+---
+
+## 📁 Project Structure
+
+```text
+DevOps-AI-Voice-Assistant/
 │
 ├── app/
 │   ├── __init__.py
@@ -17,10 +51,8 @@ devops-siri-voiceops-assistant/
 ├── frontend/
 │   ├── index.html
 │   ├── main.js
-│   └── pcm-processor.js
-│
-├── assets/
-│   └── README.md
+│   ├── pcm-processor.js
+│   └── assets/
 │
 ├── docs/
 │   ├── ARCHITECTURE.md
@@ -31,271 +63,238 @@ devops-siri-voiceops-assistant/
 ├── Dockerfile
 ├── compose.yaml
 ├── compose.safe.yaml
-│
 ├── pyproject.toml
 ├── uv.lock
 ├── requirements.txt
-│
 ├── .python-version
 ├── .env.example
 ├── .gitignore
 ├── .dockerignore
-│
 ├── run-local.sh
 ├── run-local.ps1
-│
 └── README.md
+```
 
-✨ What the Demo Can Do
+---
 
-Real-time voice conversation with Gemini Live
+## 🏗️ Architecture
 
-DevOps Siri–branded frontend
+### High-Level Flow
 
-Explain Linux, Docker, Kubernetes, Jenkins, CI/CD, networking, and troubleshooting concepts
+```mermaid
+flowchart TD
 
-Check CPU usage
+A[🎤 Browser Microphone]
+--> B[⚡ FastAPI Backend]
 
-Check memory usage
+B --> C[🤖 Gemini Live API]
 
-Check disk usage
+C --> D[🔊 Voice Response]
 
-Check TCP ports
+D --> E[🎧 Browser Speaker]
 
-Check HTTP/HTTPS endpoints
+B --> F[🛠 Read-Only DevOps Tools]
 
-List running Docker containers when Docker socket access is explicitly enabled
+F --> B
+```
 
-Show transcripts and tool activity in the UI
+### Detailed Request Flow
 
-Safety: The project intentionally exposes only read-only diagnostics. It does not provide arbitrary shell execution or destructive infrastructure actions.
+```mermaid
+sequenceDiagram
 
-🏗️ Architecture
+participant User
+participant Browser
+participant FastAPI
+participant Gemini
+participant Tools
 
-┌─────────────────────┐
-│ Browser Microphone  │
-└──────────┬──────────┘
-           │
-           │ WebSocket
-           │ 16 kHz PCM
-           ▼
-┌─────────────────────┐
-│ FastAPI / Uvicorn   │
-└──────────┬──────────┘
-           │
-           ├──────────────────────► Read-only DevOps Tools
-           │
-           ▼
-┌─────────────────────┐
-│ Google GenAI SDK    │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ Gemini Live API     │
-└──────────┬──────────┘
-           │
-           │ Streamed Voice
-           ▼
-┌─────────────────────┐
-│ Browser Speaker     │
-└─────────────────────┘
+User->>Browser: Speak into microphone
+Browser->>FastAPI: Stream PCM Audio
+FastAPI->>Gemini: Forward Audio Stream
+Gemini->>FastAPI: Generate Voice Response
 
-See docs/ARCHITECTURE.md for the detailed flow.
+alt Tool Required
+    Gemini->>Tools: Invoke Diagnostic Tool
+    Tools-->>Gemini: Return Result
+end
 
-✅ Prerequisites
+FastAPI->>Browser: Stream Audio Response
+Browser->>User: Play Assistant Voice
+```
 
-Native Local Execution
+Detailed architecture documentation:
 
-Python 3.11
+```text
+docs/ARCHITECTURE.md
+```
 
-Internet connection
+---
 
-Gemini API key
+## ✅ Prerequisites
 
-Modern browser with microphone access
+### Native Execution
 
-uv recommended
+- Python 3.11+
+- Internet connection
+- Gemini API Key
+- Modern browser with microphone access
+- uv (recommended)
 
-Docker Compose Execution
+### Docker Execution
 
-Docker Engine or Docker Desktop
+- Docker Engine / Docker Desktop
+- Docker Compose v2
+- Internet connection
+- Gemini API Key
 
-Docker Compose v2 (docker compose)
+No database, Kubernetes cluster, Node.js runtime, or cloud account is required.
 
-Internet connection
+---
 
-Gemini API key
-
-No Node.js, database, Kubernetes cluster, or cloud account is required for the local demo.
-
-⚙️ Configure the Application
+## ⚙️ Configuration
 
 Copy the environment template:
 
-Linux / macOS / WSL
+### Linux / macOS / WSL
 
+```bash
 cp .env.example .env
+```
 
-Windows PowerShell
+### Windows PowerShell
 
+```powershell
 Copy-Item .env.example .env
+```
 
-Edit .env and set your Gemini API key:
+Configure your Gemini API key:
 
+```env
 GOOGLE_GENAI_USE_VERTEXAI=FALSE
 GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
+
 LIVE_MODEL=gemini-3.8-live
 LIVE_VOICE=Aoede
+
 LOG_LEVEL=INFO
 OTEL_SDK_DISABLED=true
+
 DOCKER_SOCKET=/var/run/docker.sock
+```
 
-Important: Never commit .env to the repository.
+> ⚠️ Never commit `.env` files to source control.
 
-🚀 Run the Application
+---
 
-Option A — Run Locally with uv
+# 🚀 Running the Application
 
-Install the locked dependencies:
+## Option A: Run Using UV
 
+Install dependencies:
+
+```bash
 uv sync --frozen
+```
 
-Start the application:
+Start server:
 
-uv run uvicorn app.server:app --host 0.0.0.0 --port 8000
+```bash
+uv run uvicorn app.server:app \
+  --host 0.0.0.0 \
+  --port 8000
+```
 
-Or on Linux/macOS/WSL:
+Or:
 
+```bash
 ./run-local.sh
+```
 
-On PowerShell:
+Windows:
 
-.
-un-local.ps1
+```powershell
+.\run-local.ps1
+```
 
 Open:
 
+```text
 http://localhost:8000
+```
 
-Health endpoint:
+Health Check:
 
+```text
 http://localhost:8000/api/health
+```
 
-Detailed native setup:
+---
 
-docs/LOCAL_SETUP.md
+## Option B: Python Virtual Environment
 
-Option B — Run with Python venv + pip
+### Linux / macOS
 
-Linux / macOS / WSL
-
+```bash
 python3 -m venv .venv
+
 source .venv/bin/activate
+
 python -m pip install -r requirements.txt
-python -m uvicorn app.server:app --host 0.0.0.0 --port 8000
 
-Windows PowerShell
+python -m uvicorn app.server:app \
+  --host 0.0.0.0 \
+  --port 8000
+```
 
+### Windows
+
+```powershell
 python -m venv .venv
+
 .\.venv\Scripts\Activate.ps1
+
 python -m pip install -r requirements.txt
-python -m uvicorn app.server:app --host 0.0.0.0 --port 8000
 
-Option C — Run with Docker Compose
+python -m uvicorn app.server:app `
+  --host 0.0.0.0 `
+  --port 8000
+```
 
-Start the standard demo:
+---
 
+## Option C: Docker Compose
+
+Build and start:
+
+```bash
 docker compose up --build
+```
 
 Open:
 
+```text
 http://localhost:8000
+```
 
-Useful Commands
+Useful commands:
 
+```bash
 docker compose ps
+
 docker compose logs -f voiceops
+
 docker compose down
+```
 
-The standard compose.yaml mounts /var/run/docker.sock so the read-only Docker tool can list running containers through the Docker Engine API.
+---
 
-Security note: Docker socket access is highly privileged even when bind-mounted with :ro. Use this only on a trusted local demo machine.
+## 🔒 Safe Mode (Without Docker Socket)
 
-Run Without Docker Socket Access
+Run:
 
+```bash
 docker compose -f compose.safe.yaml up --build
+```
 
-Detailed Compose setup:
-
-docs/DOCKER_COMPOSE.md
-
-🌐 Important localhost Behavior in Docker
-
-Native Execution
-
-localhost → your host machine
-
-Docker Execution
-
-localhost → the VoiceOps container
-
-To reach a service running on your host from the Compose version, use:
-
-host.docker.internal
-
-Examples
-
-Check port 8080 on host.docker.internal.
-
-Check http://host.docker.internal:8080/health.
-
-🎙️ Demo Prompts
-
-After clicking Start Live Session, try:
-
-What's my CPU usage?
-
-Check memory usage.
-
-Check disk space.
-
-Show running Docker containers.
-
-Check port 8080 on host.docker.internal.
-
-Check http://host.docker.internal:8080/health.
-
-Explain CrashLoopBackOff.
-
-What's the difference between a Docker image and a container?
-
-How would you troubleshoot a failed Jenkins pipeline?
-
-For conceptual DevOps questions, Gemini answers directly. For supported diagnostics, Gemini can invoke a read-only tool and the UI displays the tool activity and result.
-
-📚 Documentation
-
-Document
-
-Description
-
-docs/ARCHITECTURE.md
-
-Application and runtime architecture
-
-docs/LOCAL_SETUP.md
-
-Native local execution
-
-docs/DOCKER_COMPOSE.md
-
-Docker Compose execution
-
-docs/TOOLS.md
-
-Read-only tool behavior and boundaries
-
-👤 Author
-
-Sagar
+This disables
