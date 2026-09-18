@@ -461,7 +461,7 @@ The assistant intentionally exposes only read-only diagnostic functionality.
 
 **Sagar**
 
-Backend Developer | Cloud & DevOps Engineer | AI Enthusiast
+ Cloud & DevOps Engineer | AI Enthusiast
 
 - AWS
 - Kubernetes
