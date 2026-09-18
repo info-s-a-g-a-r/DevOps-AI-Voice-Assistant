@@ -1,4 +1,4 @@
-"""FastAPI + Gemini Live backend for DevOps Shack VoiceOps Assistant."""
+"""FastAPI + Gemini Live backend for DevOps Siri VoiceOps Assistant."""
 
 import asyncio
 import json
@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from google import genai
 from google.genai import types
 
-from app.persona import DEVOPS_SHACK_INSTRUCTION
+from app.persona import DEVOPS_SIRI_INSTRUCTION
 from app.tools import TOOL_DECLARATIONS, dispatch_tool
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,13 +23,13 @@ logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 log = logging.getLogger("devops-shack-voiceops")
 
 MODEL = os.getenv("LIVE_MODEL", "gemini-3.8-live")
-VOICE = os.getenv("LIVE_VOICE", "Aoede")
+VOICE = os.getenv("LIVE_VOICE", "Charon")
 
 client = genai.Client()
 
 LIVE_CONFIG = {
     "response_modalities": ["AUDIO"],
-    "system_instruction": DEVOPS_SHACK_INSTRUCTION,
+    "system_instruction": DEVOPS_SIRI_INSTRUCTION,
     "input_audio_transcription": {},
     "output_audio_transcription": {},
     "speech_config": {
@@ -40,7 +40,7 @@ LIVE_CONFIG = {
     "tools": [{"function_declarations": TOOL_DECLARATIONS}],
 }
 
-app = FastAPI(title="DevOps Shack VoiceOps Assistant", version="1.0.0")
+app = FastAPI(title="DevOps Siri VoiceOps Assistant", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -53,7 +53,7 @@ app.add_middleware(
 def health():
     return {
         "status": "ok",
-        "application": "DevOps Shack VoiceOps Assistant",
+        "application": "DevOps Siri VoiceOps Assistant",
         "model": MODEL,
         "voice": VOICE,
     }
