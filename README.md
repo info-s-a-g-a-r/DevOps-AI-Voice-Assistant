@@ -1,6 +1,6 @@
 # 🎙️ DevOps Siri VoiceOps Assistant
 
-A DevOps Siri-branded real-time AI voice assistant for DevOps learning, troubleshooting guidance, and safe local diagnostics.
+A DevOps Siri-inspired real-time AI voice assistant for DevOps learning, troubleshooting guidance, and safe local diagnostics.
 
 The browser captures microphone audio and streams it over WebSocket to a FastAPI backend. The backend maintains a Gemini Live session, streams the assistant's voice back to the browser, and exposes a small set of read-only DevOps tools.
 
@@ -8,32 +8,24 @@ The browser captures microphone audio and streams it over WebSocket to a FastAPI
 
 ## 🚀 Features
 
-✅ Real-time voice conversation with Gemini Live
-
-✅ DevOps Siri-inspired frontend
-
-✅ Linux troubleshooting guidance
-
-✅ Docker concepts and diagnostics
-
-✅ Kubernetes learning and troubleshooting
-
-✅ Jenkins and CI/CD explanations
-
-✅ Networking fundamentals
-
-✅ Read-only system diagnostics
-
-✅ Tool activity and transcript visibility
+- 🎙️ Real-time voice conversations with Gemini Live
+- 🤖 DevOps-focused AI assistant persona
+- 🐧 Linux troubleshooting guidance
+- 🐳 Docker concepts and diagnostics
+- ☸️ Kubernetes learning and troubleshooting
+- 🔄 Jenkins and CI/CD explanations
+- 🌐 Networking fundamentals and troubleshooting
+- 📊 Read-only system diagnostics
+- 📝 Live transcripts and tool activity visibility
 
 ### Supported Diagnostics
 
-- CPU usage
-- Memory usage
-- Disk usage
-- TCP ports
-- HTTP/HTTPS endpoint checks
-- Docker container listing (optional)
+- CPU Usage
+- Memory Usage
+- Disk Usage
+- TCP Port Checks
+- HTTP/HTTPS Endpoint Checks
+- Docker Container Listing (Optional)
 
 ---
 
@@ -81,49 +73,61 @@ DevOps-AI-Voice-Assistant/
 
 ### High-Level Flow
 
-```mermaid
-flowchart TD
-
-A[🎤 Browser Microphone]
---> B[⚡ FastAPI Backend]
-
-B --> C[🤖 Gemini Live API]
-
-C --> D[🔊 Voice Response]
-
-D --> E[🎧 Browser Speaker]
-
-B --> F[🛠 Read-Only DevOps Tools]
-
-F --> B
+```text
+┌─────────────────────┐
+│ Browser Microphone  │
+└──────────┬──────────┘
+           │
+           │ WebSocket Audio
+           ▼
+┌─────────────────────┐
+│ FastAPI Backend     │
+└──────────┬──────────┘
+           │
+           ├──────────────► Read-Only DevOps Tools
+           │
+           ▼
+┌─────────────────────┐
+│ Gemini Live API     │
+└──────────┬──────────┘
+           │
+           │ Voice Response
+           ▼
+┌─────────────────────┐
+│ Browser Speaker     │
+└─────────────────────┘
 ```
 
-### Detailed Request Flow
+### Request Flow
 
-```mermaid
-sequenceDiagram
-
-participant User
-participant Browser
-participant FastAPI
-participant Gemini
-participant Tools
-
-User->>Browser: Speak into microphone
-Browser->>FastAPI: Stream PCM Audio
-FastAPI->>Gemini: Forward Audio Stream
-Gemini->>FastAPI: Generate Voice Response
-
-alt Tool Required
-    Gemini->>Tools: Invoke Diagnostic Tool
-    Tools-->>Gemini: Return Result
-end
-
-FastAPI->>Browser: Stream Audio Response
-Browser->>User: Play Assistant Voice
+```text
+User
+ │
+ ▼
+Speak into Microphone
+ │
+ ▼
+Browser Streams Audio
+ │
+ ▼
+FastAPI Backend
+ │
+ ▼
+Gemini Live Session
+ │
+ ├──► Tool Invocation (Optional)
+ │
+ ▼
+Voice Response Generated
+ │
+ ▼
+Audio Stream Returned
+ │
+ ▼
+Browser Speaker
 ```
 
-Detailed architecture documentation:
+For detailed architecture documentation, see:
 
 ```text
 docs/ARCHITECTURE.md
@@ -136,25 +140,25 @@ docs/ARCHITECTURE.md
 ### Native Execution
 
 - Python 3.11+
-- Internet connection
+- Internet Connection
 - Gemini API Key
-- Modern browser with microphone access
-- uv (recommended)
+- Modern Browser with Microphone Access
+- UV (Recommended)
 
 ### Docker Execution
 
-- Docker Engine / Docker Desktop
+- Docker Engine or Docker Desktop
 - Docker Compose v2
-- Internet connection
+- Internet Connection
 - Gemini API Key
 
-No database, Kubernetes cluster, Node.js runtime, or cloud account is required.
+> No Node.js, database, Kubernetes cluster, or cloud account is required.
 
 ---
 
 ## ⚙️ Configuration
 
-Copy the environment template:
+Copy the environment template.
 
 ### Linux / macOS / WSL
 
@@ -168,13 +172,13 @@ cp .env.example .env
 Copy-Item .env.example .env
 ```
 
-Configure your Gemini API key:
+Edit `.env` and configure your Gemini API key:
 
 ```env
 GOOGLE_GENAI_USE_VERTEXAI=FALSE
 GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
 
-LIVE_MODEL=gemini-3.8-live
+LIVE_MODEL=gemini-live-model
 LIVE_VOICE=Aoede
 
 LOG_LEVEL=INFO
@@ -183,7 +187,7 @@ OTEL_SDK_DISABLED=true
 DOCKER_SOCKET=/var/run/docker.sock
 ```
 
-> ⚠️ Never commit `.env` files to source control.
+> ⚠️ Never commit your `.env` file to the repository.
 
 ---
 
@@ -197,7 +201,7 @@ Install dependencies:
 uv sync --frozen
 ```
 
-Start server:
+Start the application:
 
 ```bash
 uv run uvicorn app.server:app \
@@ -205,13 +209,15 @@ uv run uvicorn app.server:app \
   --port 8000
 ```
 
-Or:
+Or use helper scripts:
+
+### Linux / macOS
 
 ```bash
 ./run-local.sh
 ```
 
-Windows:
+### Windows PowerShell
 
 ```powershell
 .\run-local.ps1
@@ -229,11 +235,17 @@ Health Check:
 http://localhost:8000/api/health
 ```
 
+More details:
+
+```text
+docs/LOCAL_SETUP.md
+```
+
 ---
 
-## Option B: Python Virtual Environment
+## Option B: Run Using Python Virtual Environment
 
-### Linux / macOS
+### Linux / macOS / WSL
 
 ```bash
 python3 -m venv .venv
@@ -247,7 +259,7 @@ python -m uvicorn app.server:app \
   --port 8000
 ```
 
-### Windows
+### Windows PowerShell
 
 ```powershell
 python -m venv .venv
@@ -263,9 +275,9 @@ python -m uvicorn app.server:app `
 
 ---
 
-## Option C: Docker Compose
+## Option C: Run Using Docker Compose
 
-Build and start:
+Start the application:
 
 ```bash
 docker compose up --build
@@ -287,6 +299,20 @@ docker compose logs -f voiceops
 docker compose down
 ```
 
+The default `compose.yaml` mounts:
+
+```text
+/var/run/docker.sock
+```
+
+This enables the assistant to list Docker containers via the Docker Engine API.
+
+### Security Note
+
+Docker socket access is highly privileged, even when mounted as read-only.
+
+Use this option only for local development on trusted machines.
+
 ---
 
 ## 🔒 Safe Mode (Without Docker Socket)
@@ -297,4 +323,160 @@ Run:
 docker compose -f compose.safe.yaml up --build
 ```
 
-This disables
+This disables Docker container discovery functionality while keeping all other voice assistant features available.
+
+For detailed setup instructions:
+
+```text
+docs/DOCKER_COMPOSE.md
+```
+
+---
+
+## 🌐 Docker Networking Notes
+
+### Native Execution
+
+```text
+localhost → Your Host Machine
+```
+
+### Docker Execution
+
+```text
+localhost → VoiceOps Container
+```
+
+To reach services running on the host machine from inside the container:
+
+```text
+host.docker.internal
+```
+
+Examples:
+
+```text
+Check port 8080 on host.docker.internal
+```
+
+```text
+Check http://host.docker.internal:8080/health
+```
+
+---
+
+## 🎙️ Sample Prompts
+
+Try asking:
+
+```text
+What's my CPU usage?
+```
+
+```text
+Check memory usage.
+```
+
+```text
+Check disk space.
+```
+
+```text
+Check port 8080 on host.docker.internal.
+```
+
+```text
+Check http://host.docker.internal:8080/health
+```
+
+```text
+Show running Docker containers.
+```
+
+```text
+Explain CrashLoopBackOff.
+```
+
+```text
+What's the difference between a Docker image and a container?
+```
+
+```text
+How would you troubleshoot a failed Jenkins pipeline?
+```
+
+---
+
+## 🛡️ Security Model
+
+The assistant intentionally exposes only read-only diagnostic functionality.
+
+### Allowed
+
+- ✅ CPU Inspection
+- ✅ Memory Inspection
+- ✅ Disk Inspection
+- ✅ TCP Port Checks
+- ✅ HTTP Endpoint Checks
+- ✅ Docker Container Listing
+
+### Not Allowed
+
+- ❌ Arbitrary Shell Execution
+- ❌ File Modification
+- ❌ Infrastructure Changes
+- ❌ Kubernetes Mutations
+- ❌ Container Creation or Deletion
+- ❌ Destructive System Commands
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|-----------|-------------|
+| docs/ARCHITECTURE.md | Application architecture and runtime flow |
+| docs/LOCAL_SETUP.md | Native local execution |
+| docs/DOCKER_COMPOSE.md | Docker Compose deployment |
+| docs/TOOLS.md | Tool boundaries and behavior |
+
+---
+
+## 🛠️ Technology Stack
+
+- Python
+- FastAPI
+- Uvicorn
+- Gemini Live API
+- Google GenAI SDK
+- WebSockets
+- HTML
+- CSS
+- JavaScript
+- Docker
+
+---
+
+## 👤 Author
+
+**Sagar**
+
+Backend Developer | Cloud & DevOps Engineer | AI Enthusiast
+
+- AWS
+- Kubernetes
+- Terraform
+- Observability
+- Generative AI
+- Agentic AI Systems
+
+---
+
+## ⭐ Support
+
+If you found this project useful:
+
+- ⭐ Star the repository
+- 🍴 Fork the repository
+- 🐛 Report issues
+- 🚀 Contribute improvements
